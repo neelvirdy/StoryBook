@@ -3,6 +3,7 @@ package com.storybook;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -33,9 +35,13 @@ public class ViewAlbumActivity extends Activity{
 	LinearLayout images_ll;
 	TextView title_tv;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        final Context context = getApplicationContext();
+        
         this.setContentView(R.layout.activity_view_album);
  
         ll = (FrameLayout) this.findViewById(R.id.ll);
@@ -63,7 +69,6 @@ public class ViewAlbumActivity extends Activity{
         
         publish_to_facebook = (Button) this.findViewById(R.id.publish_to_facebook);
         publish_to_facebook.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -72,6 +77,9 @@ public class ViewAlbumActivity extends Activity{
 					Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), photos.get(i), new Request.Callback(){
 						@Override
 						public void onCompleted(Response res){
+							int duration = Toast.LENGTH_SHORT;
+							CharSequence text = "Images uploaded to facebook.";
+							Toast.makeText(context, text, duration).show();
 							return;
 						}
 					});

@@ -7,7 +7,7 @@
     <HorizontalScrollView
         android:id="@+id/images_hsv"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_gravity="center"
         android:fadeScrollbars="true" >
 
@@ -41,7 +41,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/add_image" 
-            android:background="@color/purple">
+            android:background="@color/purple"
+            android:textColor="@color/white">
         </Button>
 
         <Button
@@ -50,7 +51,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/preview_gif"
-            android:background="@color/purple" >
+            android:background="@color/purple" 
+            android:textColor="@color/white">
         </Button>
 
         <Button
@@ -59,7 +61,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/publish_to_facebook" 
-            android:background="@color/purple">
+            android:background="@color/purple"
+            android:textColor="@color/white">
         </Button>
     </LinearLayout>
 
