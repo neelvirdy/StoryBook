@@ -12,7 +12,8 @@
         android:id="@+id/create_album"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_album">"
+        android:text="@string/create_album"
+        android:background="@color/purple">
     </Button>
     
     <GridView

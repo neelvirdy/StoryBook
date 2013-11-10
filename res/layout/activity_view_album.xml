@@ -1,70 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/ll"
-  android:orientation="vertical"
-  android:weightSum="10"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  
-    <LinearLayout
-        android:id="@+id/buttons"
-        android:orientation="horizontal"
-        android:weightSum = "3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        
-        	<Button
-        	    android:id="@+id/add_image"
-        	    android:layout_weight = "1"
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="fill_parent"
-        	    android:text="@string/add_image">
-        	</Button>
-        	
-        	<Button
-        	    android:id="@+id/preview_gif"
-        	    android:layout_weight = "1"
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="fill_parent"
-        	    android:text="@string/preview_gif">
-        	</Button>
-        	
-        	<Button
-        	    android:id="@+id/publish_to_facebook"
-        	    android:layout_weight = "1"
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="fill_parent"
-        	    android:text="@string/publish_to_facebook">
-        	</Button>
-        
-    </LinearLayout>
-    
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
     <HorizontalScrollView
-    	android:id="@+id/images_hsv"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_weight="6"
-    	android:fadeScrollbars="true">
-        	
-        <LinearLayout 
-            android:id="@+id/images_ll"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            >
-            
-        </LinearLayout>
-    </HorizontalScrollView>
-    
-    
-    <TextView 
-        android:id="@+id/title_tv"
+        android:id="@+id/images_hsv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:singleLine="true"
-        />
-    
-    
-</LinearLayout>
+        android:layout_gravity="center"
+        android:fadeScrollbars="true" >
+
+        <LinearLayout
+            android:id="@+id/images_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/current_album_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <Button
+            android:id="@+id/add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/add_image" 
+            android:background="@color/purple">
+        </Button>
+
+        <Button
+            android:id="@+id/preview_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/preview_gif"
+            android:background="@color/purple" >
+        </Button>
+
+        <Button
+            android:id="@+id/publish_to_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/publish_to_facebook" 
+            android:background="@color/purple">
+        </Button>
+    </LinearLayout>
+
+</FrameLayout>

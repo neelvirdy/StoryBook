@@ -2,19 +2,21 @@ package com.storybook;
 
 import java.util.ArrayList;
 
-import com.storybook.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
 
 public class ViewAlbumActivity extends Activity{
 	
@@ -22,7 +24,7 @@ public class ViewAlbumActivity extends Activity{
 	public static final int ADD_IMAGE_REQUEST = 1;
 	
 	Album album;
-	LinearLayout ll;
+	FrameLayout ll;
 	LinearLayout buttons;
 	Button add_image;
 	Button preview_gif;
@@ -36,7 +38,7 @@ public class ViewAlbumActivity extends Activity{
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_view_album);
  
-        ll = (LinearLayout) this.findViewById(R.id.ll);
+        ll = (FrameLayout) this.findViewById(R.id.ll);
         
         buttons = (LinearLayout) this.findViewById(R.id.buttons);
         
@@ -60,10 +62,27 @@ public class ViewAlbumActivity extends Activity{
         });
         
         publish_to_facebook = (Button) this.findViewById(R.id.publish_to_facebook);
+        publish_to_facebook.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ArrayList<Bitmap> photos = album.getPhotos();
+				for(int i = 0; i<photos.size(); i++){
+					Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), photos.get(i), new Request.Callback(){
+						@Override
+						public void onCompleted(Response res){
+							return;
+						}
+					});
+					request.executeAsync();
+				}
+			}
+		});
         
         images_hsv = (HorizontalScrollView) this.findViewById(R.id.images_hsv);
         images_ll = (LinearLayout) this.findViewById(R.id.images_ll);
-        title_tv = (TextView) this.findViewById(R.id.title_tv);
+        title_tv = (TextView) this.findViewById(R.id.current_album_title);
         
     }
 	
