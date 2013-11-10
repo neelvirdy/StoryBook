@@ -305,13 +305,19 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	public void onBackPressed(){
+		return;
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			break;
 		case R.id.action_logout:
-			Session.getActiveSession().closeAndClearTokenInformation();
+			if(Session.getActiveSession()!=null)
+				Session.getActiveSession().closeAndClearTokenInformation();
 			Intent i = new Intent(this, LoginScreenActivity.class);
 			startActivity(i);
 			break;
