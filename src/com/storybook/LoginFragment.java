@@ -87,37 +87,26 @@ public class LoginFragment extends Fragment{
 	}
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-		final StringContainer s = new StringContainer();
+		//final StringContainer s = new StringContainer();
+		final Activity parentActivity = getActivity();
 		if (state.isOpened()) {
 			Request r = Request.newMeRequest(session, new Request.GraphUserCallback() {
 
 				@Override
 				public void onCompleted(GraphUser user, Response response) {
 					if (user != null) {
-						// Display the parsed user info
-						s.setS(user.getId());
+						// Transmit the parsed user key
+						Log.d("key","k: "+user.getId());
+						Intent i = new Intent(parentActivity, MainActivity.class);
+						i.putExtra("userKey",user.getId());
+						startActivity(i); 
 					}
 				}
 			});
 			r.executeAsync();
-			Intent i = new Intent(getActivity(), MainActivity.class);
-			i.putExtra("userKey",s.getS());
-			startActivity(i); 
+			
 		} else if (state.isClosed()) {
 			//
-		}
-	}
-	
-	private class StringContainer{
-		String s;
-		public StringContainer(){
-			s = "";
-		}
-		public String getS(){
-			return s;
-		}
-		public void setS(String str){
-			s = str;
 		}
 	}
 }
