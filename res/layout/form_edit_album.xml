@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="3"
+    android:orientation="vertical"
+    android:padding="10dp" >
+ 
+    <TextView
+        android:id="@+id/edit_album_title_tv"
+        android:text="Title:"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+ 
+    <EditText
+        android:id="@+id/edit_album_title_et"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+ 
+        <requestFocus />
+ 
+    </EditText>
+    
+    <CheckBox
+        android:id="@+id/edit_album_reminder"
+        android:layout_weight="1"
+        android:text="@string/turn_reminders_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+    </CheckBox>
+    
+</LinearLayout>

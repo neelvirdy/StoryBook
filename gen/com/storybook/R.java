@@ -24,21 +24,24 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080010;
         public static final int add_image=0x7f080005;
         public static final int buttons=0x7f080004;
         public static final int create_album=0x7f080000;
+        public static final int edit_album_reminder=0x7f08000e;
+        public static final int edit_album_title_et=0x7f08000d;
+        public static final int edit_album_title_tv=0x7f08000c;
         public static final int gif_view=0x7f080002;
         public static final int gridView=0x7f080001;
         public static final int images_hsv=0x7f080008;
         public static final int images_ll=0x7f080009;
+        public static final int layout_root=0x7f08000b;
         public static final int ll=0x7f080003;
         public static final int preview_gif=0x7f080006;
-        public static final int preview_iv=0x7f08000b;
-        public static final int prompt_long_click_delete=0x7f08000f;
-        public static final int prompt_long_click_edit=0x7f08000e;
-        public static final int prompt_long_click_view=0x7f08000d;
-        public static final int prompts_long_click_ll=0x7f08000c;
+        public static final int preview_iv=0x7f08000f;
+        public static final int prompt_long_click_delete=0x7f080013;
+        public static final int prompt_long_click_edit=0x7f080012;
+        public static final int prompt_long_click_view=0x7f080011;
+        public static final int prompts_long_click_ll=0x7f080010;
         public static final int publish_to_facebook=0x7f080007;
         public static final int title_tv=0x7f08000a;
     }
@@ -46,8 +49,9 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int activity_preview_gif=0x7f030001;
         public static final int activity_view_album=0x7f030002;
-        public static final int list_item=0x7f030003;
-        public static final int prompts_long_click_album=0x7f030004;
+        public static final int form_edit_album=0x7f030003;
+        public static final int list_item=0x7f030004;
+        public static final int prompts_long_click_album=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f070000;
@@ -56,11 +60,13 @@ public final class R {
         public static final int action_settings=0x7f050001;
         public static final int add_image=0x7f050003;
         public static final int app_name=0x7f050000;
+        public static final int cancel=0x7f050009;
         public static final int create_album=0x7f050002;
         public static final int delete=0x7f050008;
         public static final int edit=0x7f050007;
         public static final int preview_gif=0x7f050004;
         public static final int publish_to_facebook=0x7f050005;
+        public static final int turn_reminders_on=0x7f05000a;
         public static final int view=0x7f050006;
     }
     public static final class style {

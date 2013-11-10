@@ -10,5 +10,7 @@
     <string name="view">View</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="turn_reminders_on">Turn Reminders On</string>
 
 </resources>

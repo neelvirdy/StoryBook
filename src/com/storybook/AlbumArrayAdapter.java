@@ -47,6 +47,7 @@ public class AlbumArrayAdapter extends ArrayAdapter<Album> implements OnClickLis
 				holder.preview_iv.setImageBitmap(item.getPhotos().get(0));
 			else
 				holder.preview_iv.setImageBitmap(Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888));
+			holder.reminder = item.isReminder();
 		}
 		
 		return view;
@@ -62,4 +63,5 @@ class ViewHolder{
 	TextView title_tv;
 	ImageView preview_iv;
 	ArrayList<Bitmap> photos;
+	boolean reminder;
 }
