@@ -2,22 +2,19 @@ package com.storybook;
 
 import java.util.ArrayList;
 
-import com.storybook.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,9 +22,10 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.Session;
 
 public class MainActivity extends Activity {
 
@@ -39,10 +37,14 @@ public class MainActivity extends Activity {
 	AlbumArrayAdapter adapter;
 	GridView gridView;
 	Button create_album;
+	
+	private String userKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		userKey = savedInstanceState.getString("userKey");
 		setContentView(R.layout.activity_main);
 		
 		/*HPStoryBookMongoLib sbmongo = new HPStoryBookMongoLib();
@@ -296,6 +298,21 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			break;
+		case R.id.action_logout:
+			Session.getActiveSession().closeAndClearTokenInformation();
+			Intent i = new Intent(this, LoginScreenActivity.class);
+			startActivity(i);
+			break;
+		}
 		return true;
 	}
 

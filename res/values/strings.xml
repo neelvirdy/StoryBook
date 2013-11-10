@@ -12,5 +12,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="turn_reminders_on">Turn Reminders On</string>
+    <string name="app_id">239820689511058</string>
+    <string name="logout">Logout</string>
 
 </resources>

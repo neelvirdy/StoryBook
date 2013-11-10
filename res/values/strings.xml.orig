@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">StoryBook</string>
+    <string name="action_settings">Settings</string>
+    <string name="create_album">Create Album</string>
+    <string name="add_image">Add Image</string>
+    <string name="preview_gif">Preview Gif</string>
+    <string name="publish_to_facebook">Publish to Facebook</string>
+    <string name="view">View</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+<<<<<<< Updated upstream
+    <string name="cancel">Cancel</string>
+    <string name="turn_reminders_on">Turn Reminders On</string>
+=======
+    <string name="app_id">239820689511058</string>
+    <string name="logout">Logout</string>
+>>>>>>> Stashed changes
+
+</resources>
