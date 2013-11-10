@@ -71,9 +71,11 @@ public class ViewAlbumActivity extends Activity{
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
 		if (requestCode == ADD_IMAGE_REQUEST && resultCode == RESULT_OK) {  
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ArrayList<Bitmap> newPhotos = album.getPhotos();
-            newPhotos.add(photo);
-            album.setPhotos(newPhotos);
+            if(album != null){
+            	ArrayList<Bitmap> newPhotos = album.getPhotos();
+            	newPhotos.add(photo);
+            	album.setPhotos(newPhotos);
+            }
         }
 	}
 	

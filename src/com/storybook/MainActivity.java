@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 
 	public final static int FIRST_PHOTO_REQUEST = 42;
 
-	public static ArrayList<Album> albums;
+	public static ArrayList<Album> albums = new ArrayList<Album>();
 	public static Bitmap insertMarker = Bitmap.createBitmap(1, 1,
 			Bitmap.Config.ARGB_8888);
 	AlbumArrayAdapter adapter;
@@ -44,11 +44,15 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		albums = new ArrayList<Album>();
+		
+		/*HPStoryBookMongoLib sbmongo = new HPStoryBookMongoLib();
+		sbmongo.initConnection("168.62.177.219", 10000);
+		sbmongo.initDatabase("PadTesting", "sidd", "squid05");
+		sbmongo.initCollection("testcollection");
+		sbmongo.createNewUser("siddthesquid", "sidd singal");*/
+		if(albums == null)
+			albums = new ArrayList<Album>();
 		adapter = new AlbumArrayAdapter(this, R.layout.list_item, albums);
-		ArrayList<Bitmap> testPhotos = new ArrayList<Bitmap>();
-		testPhotos.add(Bitmap.createBitmap(40, 60, Bitmap.Config.ARGB_8888));
-		albums.add(new Album("test", testPhotos, false));
 		create_album = (Button) findViewById(R.id.create_album);
 		create_album.setOnClickListener(new OnClickListener() {
 
