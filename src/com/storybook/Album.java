@@ -3,6 +3,7 @@ package com.storybook;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 
 public class Album{
 
@@ -28,11 +29,8 @@ public class Album{
 		reminder = holder.reminder;
 	}
 	
-	public boolean practicallyEqual(Album other){
-		return title.equals(other.getTitle()) && photos.size() == other.getPhotos().size() &&
-				photos.get(0).getWidth() == other.getPhotos().get(0).getWidth() &&
-				photos.get(0).getHeight() == other.getPhotos().get(0).getHeight() && 
-				photos.get(0).getPixel(0, 0) == (other.getPhotos().get(0).getPixel(0, 0));
+	public void addPhoto(Bitmap bmp){
+		photos.add(bmp);
 	}
 
 	public String getTitle() {

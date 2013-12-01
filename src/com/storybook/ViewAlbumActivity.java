@@ -1,12 +1,16 @@
 package com.storybook;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -26,6 +30,7 @@ public class ViewAlbumActivity extends Activity{
 	public static final int ADD_IMAGE_REQUEST = 1;
 	
 	Album album;
+	int albumIndex;
 	FrameLayout ll;
 	LinearLayout buttons;
 	Button add_image;
@@ -52,7 +57,12 @@ public class ViewAlbumActivity extends Activity{
         add_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
+            	File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+            	dir.mkdirs();
+            	dir = new File(dir, album.getTitle() + "%%" + album.getPhotos().size() + ".jpg");
+            	Uri uriSavedImage=Uri.fromFile(dir);
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
                 startActivityForResult(i, ADD_IMAGE_REQUEST); 
             }
         });
@@ -62,7 +72,7 @@ public class ViewAlbumActivity extends Activity{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), PreviewGifActivity.class);
-                i.putParcelableArrayListExtra("photos", album.getPhotos());
+                i.putExtra("index", albumIndex);
                 startActivity(i);
             }
         });
@@ -94,31 +104,19 @@ public class ViewAlbumActivity extends Activity{
         
     }
 	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data){
-		if (requestCode == ADD_IMAGE_REQUEST && resultCode == RESULT_OK) {  
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            if(album != null){
-            	ArrayList<Bitmap> newPhotos = album.getPhotos();
-            	newPhotos.add(photo);
-            	album.setPhotos(newPhotos);
-            }
-        }
-	}
-	
 	public void onResume(){
 		super.onResume();
+		MainActivity.loadAlbums();
 		Intent i = getIntent();
-		String title = i.getStringExtra("title");
-		ArrayList<Bitmap> photos = i.getParcelableArrayListExtra("photos");
-		album = new Album(title, photos);
+		albumIndex = i.getIntExtra("index", 0);
+		album = MainActivity.albums.get(albumIndex);
 		images_ll.removeAllViews();
-		for(Bitmap photo : photos){
+		for(Bitmap photo : album.getPhotos()){
 			ImageView photo_iv = new ImageView(this);
 			photo_iv.setImageBitmap(photo);
 			images_ll.addView(photo_iv);
 		}
-		title_tv.setText(title);
+		title_tv.setText(album.getTitle());
 	}
 	
 	public void onPause(){

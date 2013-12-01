@@ -4,7 +4,10 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
     <uses-sdk
         android:minSdkVersion="12"
@@ -57,7 +60,7 @@
 
         <provider
             android:name="com.facebook.NativeAppCallContentProvider"
-            android:authorities="com.facebook.app.NativeAppCallContentProvider233936543368280" />
+            android:authorities="com.facebook.app.NativeAppCallContentProvider692835867402601" />
     </application>
 
 </manifest>

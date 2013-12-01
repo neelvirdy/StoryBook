@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 
 import com.facebook.Request;
 import com.facebook.Response;
-import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.facebook.Session;
 
 public class LoginFragment extends Fragment{
 	private static final String TAG = "LoginFragment";

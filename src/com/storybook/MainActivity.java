@@ -1,28 +1,30 @@
 package com.storybook;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -47,16 +49,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//userKey = savedInstanceState.getString("userKey", "0");
 		setContentView(R.layout.activity_main);
 		
-		/*HPStoryBookMongoLib sbmongo = new HPStoryBookMongoLib();
-		sbmongo.initConnection("168.62.177.219", 10000);
-		sbmongo.initDatabase("PadTesting", "sidd", "squid05");
-		sbmongo.initCollection("testcollection");
-		sbmongo.createNewUser("siddthesquid", "sidd singal");*/
-		if(albums == null)
-			albums = new ArrayList<Album>();
+		loadAlbums();
 		adapter = new AlbumArrayAdapter(this, R.layout.list_item, albums);
 		create_album = (Button) findViewById(R.id.create_album);
 		create_album.setOnClickListener(new OnClickListener() {
@@ -77,12 +72,15 @@ public class MainActivity extends Activity {
 								String title = input.getText().toString();
 								Album a = new Album(title,
 										new ArrayList<Bitmap>());
-								ArrayList<Bitmap> newPhotos = a.getPhotos();
-								newPhotos.add(insertMarker);
-								a.setPhotos(newPhotos);
-								Intent i = new Intent(
-										android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-								startActivityForResult(i, FIRST_PHOTO_REQUEST);
+								
+								File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+			            	    dir.mkdirs();
+			            	    File path = new File(dir, a.getTitle() + "%%" + a.getPhotos().size() + ".jpg");
+			            		Uri uriSavedImage=Uri.fromFile(path);
+			                	Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			                	i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+			                	startActivityForResult(i, FIRST_PHOTO_REQUEST); 
+								
 								albums.add(a);
 								// add to mongodb
 								dialog.cancel();
@@ -101,6 +99,7 @@ public class MainActivity extends Activity {
 			}
 
 		});
+		
 
 		gridView = (GridView) findViewById(R.id.gridView);
 
@@ -110,16 +109,9 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				ViewHolder holder = (ViewHolder) view.getTag();
-				String title = holder.title_tv.getText().toString();
-				ArrayList<Bitmap> photos;
-				if (holder.photos != null)
-					photos = holder.photos;
-				else
-					photos = new ArrayList<Bitmap>();
 				Intent i = new Intent(getApplicationContext(),
 						ViewAlbumActivity.class);
-				i.putExtra("title", title);
-				i.putParcelableArrayListExtra("photos", photos);
+				i.putExtra("index", position);
 				startActivity(i);
 			}
 		});
@@ -128,21 +120,14 @@ public class MainActivity extends Activity {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
 				// TODO Auto-generated method stub
 				LayoutInflater li = LayoutInflater.from(MainActivity.this);
 				View promptsView = li.inflate(
 						R.layout.prompts_long_click_album, null);
 
 				final ViewHolder holder = (ViewHolder) view.getTag();
-				final Album album = new Album(holder);
-				final String title = holder.title_tv.getText().toString();
-				final ArrayList<Bitmap> photos;
-				if (holder.photos != null)
-					photos = holder.photos;
-				else
-					photos = new ArrayList<Bitmap>();
-				
+				final Album album = new Album(holder);				
 				int toChange = 0;
 				for (int i = 0; i < albums.size(); i++)
 					if (albums.get(i).getTitle()
@@ -182,8 +167,7 @@ public class MainActivity extends Activity {
 								albumLongClickDialog.dismiss();
 								Intent i = new Intent(getApplicationContext(),
 										ViewAlbumActivity.class);
-								i.putExtra("title", title);
-								i.putParcelableArrayListExtra("photos", photos);
+								i.putExtra("index", position);
 								startActivity(i);
 							}
 
@@ -273,28 +257,8 @@ public class MainActivity extends Activity {
 
 	public void onResume() {
 		super.onResume();
+		loadAlbums();
 		adapter.notifyDataSetChanged();
-	}
-
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			if (requestCode == FIRST_PHOTO_REQUEST) {
-				Album album = null;
-				for (Album a : albums)
-					if (a.getPhotos().size() == 1
-							&& a.getPhotos().get(0).equals(insertMarker))
-						album = a;
-
-				if (album != null) {
-					Bitmap photo = (Bitmap) data.getExtras().get("data");
-					Log.d("Photo Dimensions: ", photo.getWidth() + "x" + photo.getHeight());
-					ArrayList<Bitmap> newPhotos = new ArrayList<Bitmap>();
-					newPhotos.add(photo);
-					album.setPhotos(newPhotos);
-				}
-			}
-		}
-
 	}
 
 	@Override
@@ -324,5 +288,66 @@ public class MainActivity extends Activity {
 		}
 		return true;
 	}
+	
+	public static void loadAlbums(){
+		albums = new ArrayList<Album>();
+		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+		dir.mkdirs();
+		File[] files = dir.listFiles();
+		if(files == null)
+			files = new File[0];
+		Bitmap bmp;
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		for(File file : files){
+			if(file.getName().contains(".jpg") && file.getName().contains("%%")){
+				String title = file.getName().split("%%")[0];
+				Log.d("file path", file.getPath());
+				Log.d("title", title);
+				
+				Album a = new Album(title, new ArrayList<Bitmap>());
+				for(Album album : albums)
+					if(album.getTitle().equals(title)){
+						a = album;
+						Log.d("matched?", "yes");
+					}
+				
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				bmp = BitmapFactory.decodeFile(file.getPath(), options);
+				
+			    options.inSampleSize = calculateInSampleSize(options, 200, 200);
+				options.inJustDecodeBounds = false;
+				bmp = BitmapFactory.decodeFile(file.getPath(), options);
+				
+			    bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+				a.addPhoto(bmp);
+				if(a.getPhotos().size() == 1)
+					albums.add(a);
+			}
+		}
+		Log.d("num albums", albums.size() + "");
+	}
 
+	public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    // Raw height and width of image
+    final int height = options.outHeight;
+    final int width = options.outWidth;
+    int inSampleSize = 1;
+
+    if (height > reqHeight || width > reqWidth) {
+
+        final int halfHeight = height / 2;
+        final int halfWidth = width / 2;
+
+        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+        // height and width larger than the requested height and width.
+        while ((halfHeight / inSampleSize) > reqHeight
+                && (halfWidth / inSampleSize) > reqWidth) {
+            inSampleSize *= 2;
+        }
+    }
+
+    return inSampleSize;
+}
 }

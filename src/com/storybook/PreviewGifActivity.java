@@ -33,7 +33,8 @@ public class PreviewGifActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		Intent i = getIntent();
-		photos = i.getParcelableArrayListExtra("photos");
+		int albumIndex = i.getIntExtra("index", 0); 
+		photos = MainActivity.albums.get(albumIndex).getPhotos();
 		
 		index = 0;
 	    timer = new Timer();
