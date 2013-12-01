@@ -2,21 +2,21 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
-  android:weightSum="5"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_width="160dp"
+  android:layout_height="180dp"
+  android:gravity="center">
   	<ImageView
 		android:id="@+id/preview_iv"
-		android:layout_weight="4"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:layout_width="160dp"
+		android:layout_height="160dp"
+		android:layout_gravity="center"
     />
     <TextView
-		android:id="@+id/title_tv"
-		android:layout_weight="1"        
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:id="@+id/title_tv"        
+		android:layout_width="160dp"
+		android:layout_height="20dp"
 		android:singleLine="true"
 		android:textAlignment="center"
+		android:layout_gravity="center"
     />
 </LinearLayout>

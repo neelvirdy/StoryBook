@@ -36,9 +36,7 @@ public class MainActivity extends Activity {
 
 	public final static int FIRST_PHOTO_REQUEST = 42;
 
-	public static ArrayList<Album> albums = new ArrayList<Album>();
-	public static Bitmap insertMarker = Bitmap.createBitmap(1, 1,
-			Bitmap.Config.ARGB_8888);
+	public static ArrayList<Album> albums;
 	AlbumArrayAdapter adapter;
 	GridView gridView;
 	Button create_album;
@@ -51,6 +49,7 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		
+		albums = new ArrayList<Album>();
 		loadAlbums();
 		adapter = new AlbumArrayAdapter(this, R.layout.list_item, albums);
 		create_album = (Button) findViewById(R.id.create_album);
@@ -290,7 +289,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public static void loadAlbums(){
-		albums = new ArrayList<Album>();
+		albums.clear();
 		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
 		dir.mkdirs();
 		File[] files = dir.listFiles();
@@ -315,9 +314,10 @@ public class MainActivity extends Activity {
 				options.inJustDecodeBounds = true;
 				bmp = BitmapFactory.decodeFile(file.getPath(), options);
 				
-			    options.inSampleSize = calculateInSampleSize(options, 200, 200);
+			    options.inSampleSize = calculateInSampleSize(options, 300, 300);
 				options.inJustDecodeBounds = false;
 				bmp = BitmapFactory.decodeFile(file.getPath(), options);
+				Log.d("loaded photo dimensions", bmp.getWidth() + " " + bmp.getHeight());
 				
 			    bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
 				a.addPhoto(bmp);
@@ -326,6 +326,8 @@ public class MainActivity extends Activity {
 			}
 		}
 		Log.d("num albums", albums.size() + "");
+		for(Album album : albums)
+			Log.d("num photos in " + album.getTitle(), album.getPhotos().size() + "");
 	}
 
 	public static int calculateInSampleSize(

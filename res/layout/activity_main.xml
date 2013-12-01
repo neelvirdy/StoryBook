@@ -19,13 +19,14 @@
     
     <GridView
         android:id="@+id/gridView"
-    	android:numColumns="auto_fit"
-    	android:gravity="center"
-    	android:layout_below="@id/create_album"
-    	android:columnWidth="50dp"
-    	android:stretchMode="columnWidth"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-     />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_album"
+        android:columnWidth="200dp"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp" />
 
 </RelativeLayout>

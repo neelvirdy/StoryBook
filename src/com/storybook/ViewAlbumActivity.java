@@ -31,7 +31,7 @@ public class ViewAlbumActivity extends Activity{
 	
 	Album album;
 	int albumIndex;
-	FrameLayout ll;
+	LinearLayout ll;
 	LinearLayout buttons;
 	Button add_image;
 	Button preview_gif;
@@ -49,7 +49,7 @@ public class ViewAlbumActivity extends Activity{
         
         this.setContentView(R.layout.activity_view_album);
  
-        ll = (FrameLayout) this.findViewById(R.id.ll);
+        ll = (LinearLayout) this.findViewById(R.id.ll);
         
         buttons = (LinearLayout) this.findViewById(R.id.buttons);
         
@@ -113,6 +113,8 @@ public class ViewAlbumActivity extends Activity{
 		images_ll.removeAllViews();
 		for(Bitmap photo : album.getPhotos()){
 			ImageView photo_iv = new ImageView(this);
+			photo_iv.setMinimumWidth(300);
+			photo_iv.setMinimumHeight(300);
 			photo_iv.setImageBitmap(photo);
 			images_ll.addView(photo_iv);
 		}
