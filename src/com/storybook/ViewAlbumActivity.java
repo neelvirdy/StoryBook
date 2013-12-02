@@ -59,8 +59,10 @@ public class ViewAlbumActivity extends Activity{
             public void onClick(View v) {
             	File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
             	dir.mkdirs();
-            	dir = new File(dir, album.getTitle() + "%%" + album.getPhotos().size() + ".jpg");
-            	Uri uriSavedImage=Uri.fromFile(dir);
+            	File albumFolder = new File(dir, album.getTitle());
+        	    albumFolder.mkdirs();
+        	    File path = new File(albumFolder, album.getPhotos().size() + ".jpg");
+            	Uri uriSavedImage=Uri.fromFile(path);
                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
                 startActivityForResult(i, ADD_IMAGE_REQUEST); 
@@ -113,6 +115,9 @@ public class ViewAlbumActivity extends Activity{
 		images_ll.removeAllViews();
 		for(Bitmap photo : album.getPhotos()){
 			ImageView photo_iv = new ImageView(this);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lp.setMargins(5, 0, 5, 0);
+			photo_iv.setLayoutParams(lp);
 			photo_iv.setMinimumWidth(300);
 			photo_iv.setMinimumHeight(300);
 			photo_iv.setImageBitmap(photo);

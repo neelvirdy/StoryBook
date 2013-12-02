@@ -3,6 +3,8 @@ package com.storybook;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,6 +65,13 @@ public class MainActivity extends Activity {
 
 				builder.setTitle("Input Album Title");
 				final EditText input = new EditText(MainActivity.this);
+				Calendar rightNow = Calendar.getInstance();
+				StringBuilder timestamp = new StringBuilder();
+				timestamp.append(rightNow.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US));
+				timestamp.append(", " + rightNow.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US));
+				timestamp.append(" " + rightNow.get(Calendar.DATE));
+				timestamp.append(" " + rightNow.get(Calendar.YEAR));
+				input.setText(timestamp.toString());
 				builder.setView(input);
 
 				builder.setPositiveButton("Take a Picture!",
@@ -74,7 +83,9 @@ public class MainActivity extends Activity {
 								
 								File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
 			            	    dir.mkdirs();
-			            	    File path = new File(dir, a.getTitle() + "%%" + a.getPhotos().size() + ".jpg");
+			            	    File albumFolder = new File(dir, a.getTitle());
+			            	    albumFolder.mkdirs();
+			            	    File path = new File(albumFolder, a.getPhotos().size() + ".jpg");
 			            		Uri uriSavedImage=Uri.fromFile(path);
 			                	Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			                	i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
@@ -242,6 +253,8 @@ public class MainActivity extends Activity {
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
 								albumLongClickDialog.dismiss();
+								Album toRemove = albums.get(finalToChange);
+								deleteAlbum(toRemove);
 								Log.d("removed?", "" + albums.remove(finalToChange));
 								adapter.notifyDataSetChanged();
 							}
@@ -288,17 +301,52 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	public void deleteAlbum(Album album){
+		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+		dir.mkdirs();
+		File[] folders = dir.listFiles();
+		if(folders == null)
+			folders = new File[0];
+		for(File folder : folders)
+			if(folder.getName().equals(album.getTitle())){
+				File[] photos = folder.listFiles();
+				if(photos == null)
+					photos = new File[0];
+				for(File photo : photos)
+					photo.delete();
+				folder.delete();
+			}
+	}
+	
 	public static void loadAlbums(){
 		albums.clear();
 		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
 		dir.mkdirs();
-		File[] files = dir.listFiles();
-		if(files == null)
-			files = new File[0];
+		File[] folders = dir.listFiles();
+		if(folders == null)
+			folders = new File[0];
 		Bitmap bmp;
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		for(File file : files){
-			if(file.getName().contains(".jpg") && file.getName().contains("%%")){
+		for(File folder : folders){
+			Album newAlbum = new Album(folder.getName(), new ArrayList<Bitmap>());
+			File[] photos = folder.listFiles();
+			if(photos == null)
+				photos = new File[0];
+			for(File photo : photos){
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				bmp = BitmapFactory.decodeFile(photo.getPath(), options);
+				
+			    options.inSampleSize = calculateInSampleSize(options, 300, 300);
+				options.inJustDecodeBounds = false;
+				bmp = BitmapFactory.decodeFile(photo.getPath(), options);
+				Log.d("loaded photo dimensions", bmp.getWidth() + " " + bmp.getHeight());
+				
+			    bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+				newAlbum.addPhoto(bmp);
+			}
+			albums.add(newAlbum);
+			/*if(file.getName().contains(".jpg") && file.getName().contains("%%")){
 				String title = file.getName().split("%%")[0];
 				Log.d("file path", file.getPath());
 				Log.d("title", title);
@@ -323,7 +371,7 @@ public class MainActivity extends Activity {
 				a.addPhoto(bmp);
 				if(a.getPhotos().size() == 1)
 					albums.add(a);
-			}
+			}*/
 		}
 		Log.d("num albums", albums.size() + "");
 		for(Album album : albums)

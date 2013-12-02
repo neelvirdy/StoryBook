@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll"
-    android:weightSum="20"
+    android:weightSum="30"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -12,14 +12,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_weight="1"
-        android:singleLine="true" />
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="24sp" />
     
     <HorizontalScrollView
         android:id="@+id/images_hsv"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:layout_weight="17"
+        android:layout_weight="27"
         android:fadeScrollbars="true" >
 
         <LinearLayout
@@ -27,8 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="5dp" >
+            android:gravity="center">
 
         </LinearLayout>
     </HorizontalScrollView>
