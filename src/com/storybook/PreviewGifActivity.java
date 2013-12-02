@@ -33,12 +33,13 @@ public class PreviewGifActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		Intent i = getIntent();
-		int albumIndex = i.getIntExtra("index", 0); 
+		int albumIndex = i.getIntExtra("index", 0);
+		int time = i.getIntExtra("time", 500);
 		photos = MainActivity.albums.get(albumIndex).getPhotos();
 		
 		index = 0;
 	    timer = new Timer();
-	    timer.schedule(new TickClass(), 500, 1000);
+	    timer.schedule(new TickClass(), 500, (long) time);
 	}
 
 	private class TickClass extends TimerTask

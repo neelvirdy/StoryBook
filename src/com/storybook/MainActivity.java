@@ -42,15 +42,15 @@ public class MainActivity extends Activity {
 	AlbumArrayAdapter adapter;
 	GridView gridView;
 	Button create_album;
-	
+
 	private String userKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_main);
-		
+
 		albums = new ArrayList<Album>();
 		loadAlbums();
 		adapter = new AlbumArrayAdapter(this, R.layout.list_item, albums);
@@ -67,8 +67,11 @@ public class MainActivity extends Activity {
 				final EditText input = new EditText(MainActivity.this);
 				Calendar rightNow = Calendar.getInstance();
 				StringBuilder timestamp = new StringBuilder();
-				timestamp.append(rightNow.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US));
-				timestamp.append(", " + rightNow.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US));
+				timestamp.append(rightNow.getDisplayName(Calendar.DAY_OF_WEEK,
+						Calendar.SHORT, Locale.US));
+				timestamp.append(", "
+						+ rightNow.getDisplayName(Calendar.MONTH,
+								Calendar.SHORT, Locale.US));
 				timestamp.append(" " + rightNow.get(Calendar.DATE));
 				timestamp.append(" " + rightNow.get(Calendar.YEAR));
 				input.setText(timestamp.toString());
@@ -80,17 +83,22 @@ public class MainActivity extends Activity {
 								String title = input.getText().toString();
 								Album a = new Album(title,
 										new ArrayList<Bitmap>());
-								
-								File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
-			            	    dir.mkdirs();
-			            	    File albumFolder = new File(dir, a.getTitle());
-			            	    albumFolder.mkdirs();
-			            	    File path = new File(albumFolder, a.getPhotos().size() + ".jpg");
-			            		Uri uriSavedImage=Uri.fromFile(path);
-			                	Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			                	i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
-			                	startActivityForResult(i, FIRST_PHOTO_REQUEST); 
-								
+
+								File dir = new File(Environment
+										.getExternalStorageDirectory(),
+										"StoryBook");
+								dir.mkdirs();
+								File albumFolder = new File(dir, a.getTitle());
+								albumFolder.mkdirs();
+								File path = new File(albumFolder, a.getPhotos()
+										.size() + ".jpg");
+								Uri uriSavedImage = Uri.fromFile(path);
+								Intent i = new Intent(
+										MediaStore.ACTION_IMAGE_CAPTURE);
+								i.putExtra(MediaStore.EXTRA_OUTPUT,
+										uriSavedImage);
+								startActivityForResult(i, FIRST_PHOTO_REQUEST);
+
 								albums.add(a);
 								// add to mongodb
 								dialog.cancel();
@@ -109,7 +117,6 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		
 
 		gridView = (GridView) findViewById(R.id.gridView);
 
@@ -137,16 +144,15 @@ public class MainActivity extends Activity {
 						R.layout.prompts_long_click_album, null);
 
 				final ViewHolder holder = (ViewHolder) view.getTag();
-				final Album album = new Album(holder);				
+				final Album album = new Album(holder);
 				int toChange = 0;
 				for (int i = 0; i < albums.size(); i++)
-					if (albums.get(i).getTitle()
-							.equals(album.getTitle()))
+					if (albums.get(i).getTitle().equals(album.getTitle()))
 						toChange = i;
-				
+
 				final int finalToChange = toChange;
-				Log.d("index", ""+finalToChange);
-				
+				Log.d("index", "" + finalToChange);
+
 				AlertDialog.Builder albumLongClickDialogBuilder = new AlertDialog.Builder(
 						MainActivity.this);
 
@@ -158,16 +164,17 @@ public class MainActivity extends Activity {
 				Button prompt_long_click_view = (Button) promptsView
 						.findViewById(R.id.prompt_long_click_view);
 				Log.d("null?", "" + (prompt_long_click_view == null));
-				
+
 				albumLongClickDialogBuilder.setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
 							}
 						});
-				
-				final AlertDialog albumLongClickDialog = albumLongClickDialogBuilder.create();
-				
+
+				final AlertDialog albumLongClickDialog = albumLongClickDialogBuilder
+						.create();
+
 				prompt_long_click_view
 						.setOnClickListener(new OnClickListener() {
 
@@ -217,13 +224,20 @@ public class MainActivity extends Activity {
 											public void onClick(
 													DialogInterface dialog,
 													int id) {
-												String title = input.getText().toString();
-												boolean reminder = remind.isChecked();
-												albums.set(finalToChange, new Album(
-																				title,
-																				album.getPhotos(),
-																				reminder));
-												Log.d("Reminder", ""+albums.get(finalToChange).isReminder());
+												String title = input.getText()
+														.toString();
+												boolean reminder = remind
+														.isChecked();
+												albums.set(
+														finalToChange,
+														new Album(title, album
+																.getPhotos(),
+																reminder));
+												Log.d("Reminder",
+														""
+																+ albums.get(
+																		finalToChange)
+																		.isReminder());
 												adapter.notifyDataSetChanged();
 												dialog.cancel();
 											}
@@ -255,7 +269,8 @@ public class MainActivity extends Activity {
 								albumLongClickDialog.dismiss();
 								Album toRemove = albums.get(finalToChange);
 								deleteAlbum(toRemove);
-								Log.d("removed?", "" + albums.remove(finalToChange));
+								Log.d("removed?",
+										"" + albums.remove(finalToChange));
 								adapter.notifyDataSetChanged();
 							}
 
@@ -281,10 +296,10 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public void onBackPressed(){
+	public void onBackPressed() {
 		return;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -292,7 +307,7 @@ public class MainActivity extends Activity {
 		case R.id.action_settings:
 			break;
 		case R.id.action_logout:
-			if(Session.getActiveSession()!=null)
+			if (Session.getActiveSession() != null)
 				Session.getActiveSession().closeAndClearTokenInformation();
 			Intent i = new Intent(this, LoginScreenActivity.class);
 			startActivity(i);
@@ -300,104 +315,83 @@ public class MainActivity extends Activity {
 		}
 		return true;
 	}
-	
-	public void deleteAlbum(Album album){
-		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+
+	public void deleteAlbum(Album album) {
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"StoryBook");
 		dir.mkdirs();
 		File[] folders = dir.listFiles();
-		if(folders == null)
+		if (folders == null)
 			folders = new File[0];
-		for(File folder : folders)
-			if(folder.getName().equals(album.getTitle())){
+		for (File folder : folders)
+			if (folder.getName().equals(album.getTitle())) {
 				File[] photos = folder.listFiles();
-				if(photos == null)
+				if (photos == null)
 					photos = new File[0];
-				for(File photo : photos)
+				for (File photo : photos)
 					photo.delete();
 				folder.delete();
 			}
 	}
-	
-	public static void loadAlbums(){
+
+	public static void loadAlbums() {
 		albums.clear();
 		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
 		dir.mkdirs();
 		File[] folders = dir.listFiles();
-		if(folders == null)
+		if (folders == null)
 			folders = new File[0];
 		Bitmap bmp;
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		for(File folder : folders){
-			Album newAlbum = new Album(folder.getName(), new ArrayList<Bitmap>());
+		for (File folder : folders) {
+			Album newAlbum = new Album(folder.getName(),
+					new ArrayList<Bitmap>());
 			File[] photos = folder.listFiles();
-			if(photos == null)
+			if (photos == null)
 				photos = new File[0];
-			for(File photo : photos){
+			for (File photo : photos) {
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inJustDecodeBounds = true;
 				bmp = BitmapFactory.decodeFile(photo.getPath(), options);
-				
-			    options.inSampleSize = calculateInSampleSize(options, 300, 300);
+
+				options.inSampleSize = calculateInSampleSize(options, 300, 300);
 				options.inJustDecodeBounds = false;
 				bmp = BitmapFactory.decodeFile(photo.getPath(), options);
-				Log.d("loaded photo dimensions", bmp.getWidth() + " " + bmp.getHeight());
-				
-			    bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+				Log.d("loaded photo dimensions",
+						bmp.getWidth() + " " + bmp.getHeight());
+
+				bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
 				newAlbum.addPhoto(bmp);
 			}
 			albums.add(newAlbum);
-			/*if(file.getName().contains(".jpg") && file.getName().contains("%%")){
-				String title = file.getName().split("%%")[0];
-				Log.d("file path", file.getPath());
-				Log.d("title", title);
-				
-				Album a = new Album(title, new ArrayList<Bitmap>());
-				for(Album album : albums)
-					if(album.getTitle().equals(title)){
-						a = album;
-						Log.d("matched?", "yes");
-					}
-				
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inJustDecodeBounds = true;
-				bmp = BitmapFactory.decodeFile(file.getPath(), options);
-				
-			    options.inSampleSize = calculateInSampleSize(options, 300, 300);
-				options.inJustDecodeBounds = false;
-				bmp = BitmapFactory.decodeFile(file.getPath(), options);
-				Log.d("loaded photo dimensions", bmp.getWidth() + " " + bmp.getHeight());
-				
-			    bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-				a.addPhoto(bmp);
-				if(a.getPhotos().size() == 1)
-					albums.add(a);
-			}*/
 		}
 		Log.d("num albums", albums.size() + "");
-		for(Album album : albums)
-			Log.d("num photos in " + album.getTitle(), album.getPhotos().size() + "");
+		for (Album album : albums)
+			Log.d("num photos in " + album.getTitle(), album.getPhotos().size()
+					+ "");
 	}
 
-	public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-    // Raw height and width of image
-    final int height = options.outHeight;
-    final int width = options.outWidth;
-    int inSampleSize = 1;
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-    if (height > reqHeight || width > reqWidth) {
+		if (height > reqHeight || width > reqWidth) {
 
-        final int halfHeight = height / 2;
-        final int halfWidth = width / 2;
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
 
-        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-        // height and width larger than the requested height and width.
-        while ((halfHeight / inSampleSize) > reqHeight
-                && (halfWidth / inSampleSize) > reqWidth) {
-            inSampleSize *= 2;
-        }
-    }
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
 
-    return inSampleSize;
-}
+		return inSampleSize;
+	}
 }
