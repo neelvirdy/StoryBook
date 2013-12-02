@@ -94,7 +94,10 @@ public class ViewAlbumActivity extends Activity {
 					public void onProgressChanged(SeekBar seekBar,
 							int progress, boolean fromUser) {
 						// TODO Auto-generated method stub
-						value.setText(progress + "");
+						if(progress > 50)
+							value.setText(progress + "");
+						else
+							value.setText(50 + "");
 					}
 
 					@Override
@@ -110,7 +113,7 @@ public class ViewAlbumActivity extends Activity {
 					}
 					
 				});
-				int suggestedTime = (int) (Math.abs(800 - Math.sqrt(Math.pow(album.getPhotos().size() + 10, 2))));
+				int suggestedTime = (int) (Math.abs(800 - Math.sqrt(Math.pow(album.getPhotos().size() + 10, 3))));
 				if(suggestedTime <= 50)
 					suggestedTime = 50;
 				seek.setProgress(suggestedTime);
@@ -122,21 +125,20 @@ public class ViewAlbumActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								int time = seek.getProgress();
-								if(time == 0)
-									time = 1;
+								if(time <= 50)
+									time = 50;
 								Intent i = new Intent(getApplicationContext(),
 										PreviewGifActivity.class);
 								i.putExtra("index", albumIndex);
 								i.putExtra("time", time);
 								startActivity(i);
-								finish();
 							}
 						});
 
 				alert.setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								finish();
+								
 							}
 						});
 
