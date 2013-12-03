@@ -128,7 +128,7 @@ public class ViewAlbumActivity extends Activity {
 										Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 										i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
 										startActivityForResult(i, ADD_IMAGE_REQUEST);
-										MainActivity.loadAlbums();
+										MainActivity.loadAlbum(album);
 										deletePhoto(position);
 										refresh();
 									}
@@ -164,7 +164,7 @@ public class ViewAlbumActivity extends Activity {
 										photoLongClickDialog.dismiss();
 										deletePhoto(position);
 										fixNamesAfter(position);
-										MainActivity.loadAlbums();
+										MainActivity.loadAlbum(album);
 										refresh();
 									}
 									
@@ -321,10 +321,10 @@ public class ViewAlbumActivity extends Activity {
 
 	public void onResume() {
 		super.onResume();
-		MainActivity.loadAlbums();
 		Intent i = getIntent();
 		albumIndex = i.getIntExtra("index", 0);
 		album = MainActivity.albums.get(albumIndex);
+		MainActivity.loadAlbum(album);
 		refresh();
 	}
 	

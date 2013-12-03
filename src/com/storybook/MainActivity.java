@@ -220,7 +220,9 @@ public class MainActivity extends Activity {
 														.toString();
 												boolean reminder = remind
 														.isChecked();
-												String oldTitle = albums.get(finalToChange).getTitle();
+												String oldTitle = albums.get(
+														finalToChange)
+														.getTitle();
 												albums.set(
 														finalToChange,
 														new Album(title, album
@@ -260,35 +262,43 @@ public class MainActivity extends Activity {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								
-								
-								AlertDialog.Builder areYouSure = new AlertDialog.Builder(MainActivity.this);
-								areYouSure.setTitle("Are you sure you want to delete this album?");
-								areYouSure.setPositiveButton("OK", new DialogInterface.OnClickListener(){
 
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										// TODO Auto-generated method stub
-										albumLongClickDialog.dismiss();
-										Album toRemove = albums.get(finalToChange);
-										deleteAlbum(toRemove);
-										Log.d("removed?",
-												"" + albums.remove(finalToChange));
-										adapter.notifyDataSetChanged();
-									}
-									
-								});
-								
-								areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog, int id) {
-										dialog.cancel();
-									}
-								});
-							
-								
+								AlertDialog.Builder areYouSure = new AlertDialog.Builder(
+										MainActivity.this);
+								areYouSure
+										.setTitle("Are you sure you want to delete this album?");
+								areYouSure.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+												// TODO Auto-generated method
+												// stub
+												albumLongClickDialog.dismiss();
+												Album toRemove = albums
+														.get(finalToChange);
+												deleteAlbum(toRemove);
+												Log.d("removed?",
+														""
+																+ albums.remove(finalToChange));
+												adapter.notifyDataSetChanged();
+											}
+
+										});
+
+								areYouSure.setNegativeButton("Cancel",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+												dialog.cancel();
+											}
+										});
+
 								areYouSure.show();
 							}
-							
 
 						});
 				albumLongClickDialog.show();
@@ -347,8 +357,8 @@ public class MainActivity extends Activity {
 				folder.delete();
 			}
 	}
-	
-	public void renameFiles(String oldTitle, String newTitle){
+
+	public void renameFiles(String oldTitle, String newTitle) {
 		File dir = new File(Environment.getExternalStorageDirectory(),
 				"StoryBook");
 		dir.mkdirs();
@@ -369,7 +379,8 @@ public class MainActivity extends Activity {
 
 	public static void loadAlbums() {
 		albums.clear();
-		File dir = new File(Environment.getExternalStorageDirectory(), "StoryBook");
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"StoryBook");
 		dir.mkdirs();
 		File[] folders = dir.listFiles();
 		if (folders == null)
@@ -390,8 +401,6 @@ public class MainActivity extends Activity {
 				options.inSampleSize = calculateInSampleSize(options, 300, 300);
 				options.inJustDecodeBounds = false;
 				bmp = BitmapFactory.decodeFile(photo.getPath(), options);
-				Log.d("loaded photo dimensions",
-						bmp.getWidth() + " " + bmp.getHeight());
 
 				bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
 				newAlbum.addPhoto(bmp);
@@ -402,6 +411,40 @@ public class MainActivity extends Activity {
 		for (Album album : albums)
 			Log.d("num photos in " + album.getTitle(), album.getPhotos().size()
 					+ "");
+	}
+
+	public static void loadAlbum(Album album) {
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"StoryBook");
+		dir.mkdirs();
+		File[] folders = dir.listFiles();
+		if (folders == null)
+			folders = new File[0];
+		Bitmap bmp;
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		for (File folder : folders) {
+			if (folder.getName().equals(album.getTitle())) {
+				Album newAlbum = new Album(folder.getName(),
+						new ArrayList<Bitmap>());
+				File[] photos = folder.listFiles();
+				if (photos == null)
+					photos = new File[0];
+				for (File photo : photos) {
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inJustDecodeBounds = true;
+					bmp = BitmapFactory.decodeFile(photo.getPath(), options);
+
+					options.inSampleSize = calculateInSampleSize(options, 300,
+							300);
+					options.inJustDecodeBounds = false;
+					bmp = BitmapFactory.decodeFile(photo.getPath(), options);
+
+					bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+					newAlbum.addPhoto(bmp);
+				}
+				albums.set(albums.indexOf(album), newAlbum);
+			}
+		}
 	}
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
