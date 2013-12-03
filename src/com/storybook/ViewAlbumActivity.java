@@ -108,21 +108,40 @@ public class ViewAlbumActivity extends Activity {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								photoLongClickDialog.dismiss();
-								deletePhoto(position);
-								File dir = new File(Environment.getExternalStorageDirectory(),
-										"StoryBook");
-								dir.mkdirs();
-								File albumFolder = new File(dir, album.getTitle());
-								albumFolder.mkdirs();
-								File path = new File(albumFolder, position
-										+ ".jpg");
-								Uri uriSavedImage = Uri.fromFile(path);
-								Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-								i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
-								startActivityForResult(i, ADD_IMAGE_REQUEST);
-								MainActivity.loadAlbums();
-								refresh();
+								
+								AlertDialog.Builder areYouSure = new AlertDialog.Builder(ViewAlbumActivity.this);
+								areYouSure.setTitle("Are you sure you want to retake this photo?");
+								areYouSure.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										// TODO Auto-generated method stub
+										photoLongClickDialog.dismiss();
+										File dir = new File(Environment.getExternalStorageDirectory(),
+												"StoryBook");
+										dir.mkdirs();
+										File albumFolder = new File(dir, album.getTitle());
+										albumFolder.mkdirs();
+										File path = new File(albumFolder, position
+												+ ".jpg");
+										Uri uriSavedImage = Uri.fromFile(path);
+										Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+										i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+										startActivityForResult(i, ADD_IMAGE_REQUEST);
+										MainActivity.loadAlbums();
+										deletePhoto(position);
+										refresh();
+									}
+									
+								});
+								
+								areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.cancel();
+									}
+								});
+								
+								areYouSure.show();
 							}
 						});
 
@@ -134,11 +153,30 @@ public class ViewAlbumActivity extends Activity {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								photoLongClickDialog.dismiss();
-								deletePhoto(position);
-								fixNamesAfter(position);
-								MainActivity.loadAlbums();
-								refresh();
+								
+								AlertDialog.Builder areYouSure = new AlertDialog.Builder(ViewAlbumActivity.this);
+								areYouSure.setTitle("Are you sure you want to delete this photo?");
+								areYouSure.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										// TODO Auto-generated method stub
+										photoLongClickDialog.dismiss();
+										deletePhoto(position);
+										fixNamesAfter(position);
+										MainActivity.loadAlbums();
+										refresh();
+									}
+									
+								});
+								
+								areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.cancel();
+									}
+								});
+								
+								areYouSure.show();
 							}
 
 						});
@@ -331,9 +369,12 @@ public class ViewAlbumActivity extends Activity {
 				File[] photos = folder.listFiles();
 				if (photos == null)
 					photos = new File[0];
-				for (File photo : photos)
-					if(photo.getName().split(".").length > 0 && Integer.valueOf(photo.getName().split(".")[0]) > index)
-						photo.renameTo(new File(folder, (Integer.valueOf(photo.getName().split(".")[0])-1)+".jpg"));
+				for (File photo : photos){
+					Log.d("old photo name", photo.getName());
+					if(photo.getName().split("\\.").length > 0 && Integer.valueOf(photo.getName().split("\\.")[0]) > index)
+						photo.renameTo(new File(folder, (Integer.valueOf(photo.getName().split("\\.")[0])-1)+".jpg"));
+					Log.d("new photo name", photo.getName());
+				}
 			}
 	}
 	

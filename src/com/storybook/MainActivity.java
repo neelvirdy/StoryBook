@@ -260,13 +260,35 @@ public class MainActivity extends Activity {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								albumLongClickDialog.dismiss();
-								Album toRemove = albums.get(finalToChange);
-								deleteAlbum(toRemove);
-								Log.d("removed?",
-										"" + albums.remove(finalToChange));
-								adapter.notifyDataSetChanged();
+								
+								
+								AlertDialog.Builder areYouSure = new AlertDialog.Builder(MainActivity.this);
+								areYouSure.setTitle("Are you sure you want to delete this album?");
+								areYouSure.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										// TODO Auto-generated method stub
+										albumLongClickDialog.dismiss();
+										Album toRemove = albums.get(finalToChange);
+										deleteAlbum(toRemove);
+										Log.d("removed?",
+												"" + albums.remove(finalToChange));
+										adapter.notifyDataSetChanged();
+									}
+									
+								});
+								
+								areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.cancel();
+									}
+								});
+							
+								
+								areYouSure.show();
 							}
+							
 
 						});
 				albumLongClickDialog.show();
@@ -298,8 +320,6 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			break;
 		case R.id.action_logout:
 			if (Session.getActiveSession() != null)
 				Session.getActiveSession().closeAndClearTokenInformation();
