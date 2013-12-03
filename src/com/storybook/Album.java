@@ -32,6 +32,10 @@ public class Album{
 	public void addPhoto(Bitmap bmp){
 		photos.add(bmp);
 	}
+	
+	public void removePhoto(int i){
+		photos.remove(i);
+	}
 
 	public String getTitle() {
 		return title;

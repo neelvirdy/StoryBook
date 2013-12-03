@@ -29,8 +29,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.facebook.Session;
 
@@ -42,8 +40,6 @@ public class MainActivity extends Activity {
 	AlbumArrayAdapter adapter;
 	GridView gridView;
 	Button create_album;
-
-	private String userKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +121,6 @@ public class MainActivity extends Activity {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ViewHolder holder = (ViewHolder) view.getTag();
 				Intent i = new Intent(getApplicationContext(),
 						ViewAlbumActivity.class);
 				i.putExtra("index", position);
@@ -159,10 +154,8 @@ public class MainActivity extends Activity {
 				// set prompts.xml to alertdialog builder
 				albumLongClickDialogBuilder.setView(promptsView);
 
-				LinearLayout prompts_long_click_ll = (LinearLayout) promptsView
-						.findViewById(R.id.prompts_long_click_ll);
 				Button prompt_long_click_view = (Button) promptsView
-						.findViewById(R.id.prompt_long_click_view);
+						.findViewById(R.id.prompt_long_click_album_view);
 				Log.d("null?", "" + (prompt_long_click_view == null));
 
 				albumLongClickDialogBuilder.setNegativeButton("Cancel",
@@ -191,7 +184,7 @@ public class MainActivity extends Activity {
 						});
 
 				Button prompt_long_click_edit = (Button) promptsView
-						.findViewById(R.id.prompt_long_click_edit);
+						.findViewById(R.id.prompt_long_click_album_edit);
 				prompt_long_click_edit
 						.setOnClickListener(new OnClickListener() {
 
@@ -209,8 +202,7 @@ public class MainActivity extends Activity {
 										R.layout.form_edit_album, null);
 
 								builder.setTitle("Edit Album");
-								final TextView promptTitle = (TextView) editView
-										.findViewById(R.id.edit_album_title_tv);
+
 								final EditText input = (EditText) editView
 										.findViewById(R.id.edit_album_title_et);
 								final CheckBox remind = (CheckBox) editView
@@ -228,6 +220,7 @@ public class MainActivity extends Activity {
 														.toString();
 												boolean reminder = remind
 														.isChecked();
+												String oldTitle = albums.get(finalToChange).getTitle();
 												albums.set(
 														finalToChange,
 														new Album(title, album
@@ -238,6 +231,7 @@ public class MainActivity extends Activity {
 																+ albums.get(
 																		finalToChange)
 																		.isReminder());
+												renameFiles(oldTitle, title);
 												adapter.notifyDataSetChanged();
 												dialog.cancel();
 											}
@@ -259,7 +253,7 @@ public class MainActivity extends Activity {
 						});
 
 				Button prompt_long_click_delete = (Button) promptsView
-						.findViewById(R.id.prompt_long_click_delete);
+						.findViewById(R.id.prompt_long_click_album_delete);
 				prompt_long_click_delete
 						.setOnClickListener(new OnClickListener() {
 
@@ -331,6 +325,25 @@ public class MainActivity extends Activity {
 				for (File photo : photos)
 					photo.delete();
 				folder.delete();
+			}
+	}
+	
+	public void renameFiles(String oldTitle, String newTitle){
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"StoryBook");
+		dir.mkdirs();
+		File[] folders = dir.listFiles();
+		if (folders == null)
+			folders = new File[0];
+		for (File folder : folders)
+			if (folder.getName().equals(oldTitle)) {
+				File newFolder = new File(dir, newTitle);
+				File[] photos = folder.listFiles();
+				if (photos == null)
+					photos = new File[0];
+				for (File photo : photos)
+					photo.renameTo(new File(newFolder, photo.getName()));
+				folder.renameTo(newFolder);
 			}
 	}
 

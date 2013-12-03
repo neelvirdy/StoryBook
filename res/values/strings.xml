@@ -9,6 +9,7 @@
     <string name="publish_to_facebook">Publish</string>
     <string name="view">View</string>
     <string name="edit">Edit</string>
+    <string name="retake">Retake</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="turn_reminders_on">Turn Reminders On</string>
