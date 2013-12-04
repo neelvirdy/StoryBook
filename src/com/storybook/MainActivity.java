@@ -154,10 +154,6 @@ public class MainActivity extends Activity {
 				// set prompts.xml to alertdialog builder
 				albumLongClickDialogBuilder.setView(promptsView);
 
-				Button prompt_long_click_view = (Button) promptsView
-						.findViewById(R.id.prompt_long_click_album_view);
-				Log.d("null?", "" + (prompt_long_click_view == null));
-
 				albumLongClickDialogBuilder.setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
@@ -168,6 +164,8 @@ public class MainActivity extends Activity {
 				final AlertDialog albumLongClickDialog = albumLongClickDialogBuilder
 						.create();
 
+				Button prompt_long_click_view = (Button) promptsView
+						.findViewById(R.id.prompt_long_click_album_view);
 				prompt_long_click_view
 						.setOnClickListener(new OnClickListener() {
 

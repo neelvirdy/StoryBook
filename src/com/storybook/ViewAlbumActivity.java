@@ -75,10 +75,6 @@ public class ViewAlbumActivity extends Activity {
 				// set prompts.xml to alertdialog builder
 				photoLongClickDialogBuilder.setView(promptsView);
 
-				Button prompt_long_click_view = (Button) promptsView
-						.findViewById(R.id.prompt_long_click_photo_view);
-				Log.d("null?", "" + (prompt_long_click_view == null));
-
 				photoLongClickDialogBuilder.setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
@@ -89,6 +85,8 @@ public class ViewAlbumActivity extends Activity {
 				final AlertDialog photoLongClickDialog = photoLongClickDialogBuilder
 						.create();
 
+				Button prompt_long_click_view = (Button) promptsView
+						.findViewById(R.id.prompt_long_click_photo_view);
 				prompt_long_click_view
 						.setOnClickListener(new OnClickListener() {
 
@@ -99,6 +97,35 @@ public class ViewAlbumActivity extends Activity {
 							}
 
 						});
+				
+				Button prompt_long_click_insert_photo_before = (Button) promptsView
+						.findViewById(R.id.prompt_long_click_photo_insert_photo_before);
+				prompt_long_click_insert_photo_before
+						.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								photoLongClickDialog.dismiss();
+								incrementFileNamesAfter(position-1);
+								File dir = new File(Environment.getExternalStorageDirectory(),
+										"StoryBook");
+								dir.mkdirs();
+								File albumFolder = new File(dir, album.getTitle());
+								albumFolder.mkdirs();
+								File path = new File(albumFolder, position
+										+ ".jpg");
+								Uri uriSavedImage = Uri.fromFile(path);
+								Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+								i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+								startActivityForResult(i, ADD_IMAGE_REQUEST);
+								MainActivity.loadAlbum(album);
+								refresh();
+							}
+
+						});
+				
+				
 
 				Button prompt_long_click_retake = (Button) promptsView
 						.findViewById(R.id.prompt_long_click_photo_retake);
@@ -129,7 +156,6 @@ public class ViewAlbumActivity extends Activity {
 										i.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
 										startActivityForResult(i, ADD_IMAGE_REQUEST);
 										MainActivity.loadAlbum(album);
-										deletePhoto(position);
 										refresh();
 									}
 									
@@ -163,7 +189,7 @@ public class ViewAlbumActivity extends Activity {
 										// TODO Auto-generated method stub
 										photoLongClickDialog.dismiss();
 										deletePhoto(position);
-										fixNamesAfter(position);
+										decrementFileNamesAfter(position);
 										MainActivity.loadAlbum(album);
 										refresh();
 									}
@@ -357,7 +383,7 @@ public class ViewAlbumActivity extends Activity {
 				MainActivity.albums.set(i, album);
 	}
 
-	public void fixNamesAfter(int index){
+	public void decrementFileNamesAfter(int index){
 		File dir = new File(Environment.getExternalStorageDirectory(),
 				"StoryBook");
 		dir.mkdirs();
@@ -373,6 +399,27 @@ public class ViewAlbumActivity extends Activity {
 					Log.d("old photo name", photo.getName());
 					if(photo.getName().split("\\.").length > 0 && Integer.valueOf(photo.getName().split("\\.")[0]) > index)
 						photo.renameTo(new File(folder, (Integer.valueOf(photo.getName().split("\\.")[0])-1)+".jpg"));
+					Log.d("new photo name", photo.getName());
+				}
+			}
+	}
+	
+	public void incrementFileNamesAfter(int index){
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"StoryBook");
+		dir.mkdirs();
+		File[] folders = dir.listFiles();
+		if (folders == null)
+			folders = new File[0];
+		for (File folder : folders)
+			if (folder.getName().equals(album.getTitle())) {
+				File[] photos = folder.listFiles();
+				if (photos == null)
+					photos = new File[0];
+				for (File photo : photos){
+					Log.d("old photo name", photo.getName());
+					if(photo.getName().split("\\.").length > 0 && Integer.valueOf(photo.getName().split("\\.")[0]) > index)
+						photo.renameTo(new File(folder, (Integer.valueOf(photo.getName().split("\\.")[0])+1)+".jpg"));
 					Log.d("new photo name", photo.getName());
 				}
 			}

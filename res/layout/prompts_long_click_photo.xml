@@ -17,6 +17,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <Button
+        android:id="@+id/prompt_long_click_photo_insert_photo_before"
+        android:text="@string/insert_photo_before"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <Button
         android:id="@+id/prompt_long_click_photo_retake"
         android:text="@string/retake"
         android:layout_weight="1"

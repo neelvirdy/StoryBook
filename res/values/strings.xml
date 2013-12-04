@@ -11,6 +11,7 @@
     <string name="edit">Edit</string>
     <string name="retake">Retake</string>
     <string name="delete">Delete</string>
+    <string name="insert_photo_before">Insert Photo Before</string>
     <string name="cancel">Cancel</string>
     <string name="turn_reminders_on">Turn Reminders On</string>
     <string name="app_id">692835867402601</string>
